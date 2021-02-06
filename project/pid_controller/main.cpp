@@ -213,37 +213,26 @@ int main ()
   time_t prev_timer;
   time_t timer;
   time(&prev_timer);
-
-  // create instance pid
-  PID pid_throttle = PID();
-  PID pid_steer = PID(); 
  
-  // initialize values for pid steer
-  double Kpi_steer = 0.1;
-  double Kii_steer = 0.01;
-  double Kdi_steer = 0.01;
-  double output_lim_max_steer = 1.2;
-  double output_lim_min_steer = -1.2;
-  pid_steer.Init(Kpi_steer, Kii_steer, Kdi_steer, output_lim_max_steer, output_lim_min_steer);
+  // initialize pid steer
+  /**
+  * TODO (Step 1): create pid (pid_steer) for steer command and initialize values
+  **/
+
   
-  // initialize values for pid throttle
-  double Kpi_throttle = 0.1;
-  double Kii_throttle = 0.01;
-  double Kdi_throttle = 0.01;
-  double output_lim_max_throttle = 1;
-  double output_lim_min_throttle = -1;
-  pid_throttle.Init(Kpi_throttle, Kii_throttle, Kdi_throttle, output_lim_max_throttle, output_lim_min_throttle);
+  // initialize pid throttle
+  /**
+  * TODO (Step 1): create pid (pid_throttle) for throttle command and initialize values
+  **/
+
     
   h.onMessage([&pid_steer, &pid_throttle, &new_delta_time, &timer, &prev_timer, &i, &prev_timer](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode)
   {
         auto s = hasData(data);
     
-    	cout << "................" << endl;
-    
         if (s != "") {
           
           auto data = json::parse(s);
-          
           
           // create file to save values
           fstream file_steer;
@@ -279,56 +268,37 @@ int main ()
           vector< vector<double> > spirals_v;
           vector<int> best_spirals;
           
-          cout << "velocity received: ";
-          cout << velocity << endl;
-          
-          cout << "yaw received: ";
-          cout << yaw << endl;
-          
-          cout << "path planner called" << endl;
-          
           path_planner(x_points, y_points, v_points, yaw, velocity, goal, is_junction, tl_state, spirals_x, spirals_y, spirals_v, best_spirals);
-          
+
+          // Save time and compute delta time
+          time(&timer);
+          new_delta_time = difftime(timer, prev_timer);
+          prev_timer = timer;
+
           ////////////////////////////////////////
           // Steering control 
           ////////////////////////////////////////
-          
-          time(&timer);
-          new_delta_time = difftime(timer, prev_timer); 
-          
-          prev_timer = timer;
-          
-          cout << "new_delta_time: ";           
-          cout << new_delta_time << endl;
-          
+
+          // Update the delta time with the previous command
           pid_steer.UpdateDeltaTime(new_delta_time);
-            
+
           // Compute steer error
           double error_steer;
-          double vect_direction_x;
-          double vect_direction_y;
-          vect_direction_x = x_points.back() - x_points[0];
-          vect_direction_y = y_points.back() - y_points[0];
-          
-          double trajectory_heading = atan2(vect_direction_y, vect_direction_x);
-          
-          error_steer = trajectory_heading - yaw;
-            
-          cout << "error_steer: ";           
-          cout << error_steer << endl;
+          /**
+          * TODO (step 3): compute the steer error (error_steer) from the position and the desired trajectory
+          **/
+          // modify the following line for step 3
+          error_steer = 0;
           
           // Compute control to apply
           pid_steer.UpdateError(error_steer);
           double steer_output = pid_steer.TotalError();
-          
-          cout << "steer_output: ";
-          cout << steer_output << endl;
-          
+
+          // Save data
           file_steer.seekg(std::ios::beg);
-          for(int j=0; j < i - 1; ++j){
-              file_steer.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+          for(int j=0; j < i - 1; ++j) {
+              file_steer.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
           }
-            
           file_steer  << i ;
           file_steer  << " " << error_steer;
           file_steer  << " " << steer_output << endl;
@@ -337,54 +307,42 @@ int main ()
           // Throttle control 
           ////////////////////////////////////////
 
-          // Compute error of speed
-          double v_obj = v_points.back();
-          double error_throttle = v_obj - velocity;
-          
-          cout << "v_obj: ";
-          cout << v_obj << endl;
-          
-          cout << "velocity: ";
-          cout << velocity << endl;
-          
-          cout << "error_throttle: ";
-          cout << error_throttle << endl;
-          
+          // Update the delta time with the previous command
           pid_throttle.UpdateDeltaTime(new_delta_time);
-          
+
+          // Compute error of speed
+          double error_throttle;
+          /**
+          * TODO (step 2): compute the throttle error (error_throttle) from the position and the desired speed
+          **/
+          // modify the following line for step 2
+          error_throttle = 0;
+
           // Compute control to apply
           pid_throttle.UpdateError(error_throttle);
           double throttle = pid_throttle.TotalError();
           double throttle_output;
           double brake_output;
-          
+
+          // Adapt the negative throttle to break
           if (throttle > 0.0) {
             throttle_output = throttle;
             brake_output = 0;
-          }
-          else if (throttle >= -0.85) {
-            throttle_output = 0;
-            brake_output = 0;  
           } else {
             throttle_output = 0;
-            brake_output = (-throttle + 1)/(1-0.85);
+            brake_output = -throttle;
           }
-          
+
+          // Save data
           file_throttle.seekg(std::ios::beg);
           for(int j=0; j < i - 1; ++j){
               file_throttle.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
           }
-          
           file_throttle  << i ;
           file_throttle  << " " << error_throttle;
           file_throttle  << " " << brake_output;
           file_throttle  << " " << throttle_output << endl;
-          
-          cout << "brake_output: ";
-          cout << brake_output << endl;
-          
-          cout << "throttle_output: ";
-          cout << throttle_output << endl;
+
           
           // Send control
           json msgJson;
