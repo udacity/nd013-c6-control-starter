@@ -1,3 +1,0 @@
-/home/workspace/nd013-c5-planning-refresh/project/solution_cubic_spirals/CMakeFiles/rebuild_cache.dir
-/home/workspace/nd013-c5-planning-refresh/project/solution_cubic_spirals/CMakeFiles/spiral_planner.dir
-/home/workspace/nd013-c5-planning-refresh/project/solution_cubic_spirals/CMakeFiles/edit_cache.dir
