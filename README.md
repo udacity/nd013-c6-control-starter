@@ -13,9 +13,9 @@ Instructions for how to get a copy of the project running on your local machine.
 
 Run the following commands to install the starter code in the Udacity Workspace:
 
-Clone the [repository](https://github.com/udacity/nd013-c6-control-refresh/tree/master):
+Clone the [repository](https://github.com/udacity/nd013-c6-control-starter/tree/master):
 
-`git clone https://github.com/udacity/nd013-c6-control-refresh.git`
+`git clone https://github.com/udacity/nd013-c6-control-starter.git`
 
 Run Carla Simulator
 -------------------
