@@ -59,7 +59,7 @@ In the previous project you built a path planner for the autonomous vehicle. Now
 You will design and run the a PID controller as described in the previous course. 
 
 In the directory [/pid_controller](https://github.com/udacity/nd013-c5-planning-starter/tree/mathilde/project_c6/project/pid_controller)  you will find the files [pid.cpp](https://github.com/udacity/nd013-c5-planning-starter/tree/mathilde/project_c6/project/pid_controller/pid.cpp)  and [pid.h](https://github.com/udacity/nd013-c5-planning-starter/tree/mathilde/project_c6/project/pid_controller/pid.h). This is where you will code your pid controller. 
-The function pid is called in [main.cpp](https://github.com/udacity/nd013-c5-planning-starter/tree/mathilde/project_c6/project/pid_controller/main.cpp) but you should not modify this file. 
+The function pid is called in [main.cpp](https://github.com/udacity/nd013-c5-planning-starter/tree/mathilde/project_c6/project/pid_controller/main.cpp).
 
 ### Step 1: Build the PID controller object
 Complete the TODO in the [pid_controller.h](https://github.com/udacity/nd013-c5-planning-starter/tree/mathilde/project_c6/project/pid_controller/pid_controller.h) and [pid_controller.cpp](https://github.com/udacity/nd013-c5-planning-starter/tree/mathilde/project_c6/project/pid_controller/pid_controller.cpp). 
