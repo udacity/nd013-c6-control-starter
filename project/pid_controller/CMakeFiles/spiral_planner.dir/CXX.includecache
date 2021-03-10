@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/behavior_planner_FSM.cpp
+/home/workspace/nd013-c6-control-starter/project/starter_files/behavior_planner_FSM.cpp
 behavior_planner_FSM.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/behavior_planner_FSM.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/behavior_planner_FSM.h
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/behavior_planner_FSM.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/behavior_planner_FSM.h
 chrono
 -
 cmath
@@ -26,17 +26,17 @@ glog/logging.h
 gtest/gtest.h
 -
 planning_params.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/planning_params.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/planning_params.h
 structs.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/structs.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/structs.h
 utils.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/utils.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/utils.h
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/cost_functions.cpp
+/home/workspace/nd013-c6-control-starter/project/starter_files/cost_functions.cpp
 cost_functions.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/cost_functions.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/cost_functions.h
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/cost_functions.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/cost_functions.h
 math.h
 -
 algorithm
@@ -56,43 +56,43 @@ carla/client/Client.h
 glog/logging.h
 -
 planning_params.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/planning_params.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/planning_params.h
 structs.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/structs.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/structs.h
 utils.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/utils.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/utils.h
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/cubic_spiral.cpp
+/home/workspace/nd013-c6-control-starter/project/starter_files/cubic_spiral.cpp
 cubic_spiral.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/cubic_spiral.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/cubic_spiral.h
 algorithm
 -
 glog/logging.h
 -
 Eigen/Core
-/home/workspace/nd013-c5-planning-starter/project/starter_files/Eigen/Core
+/home/workspace/nd013-c6-control-starter/project/starter_files/Eigen/Core
 Eigen/LU
-/home/workspace/nd013-c5-planning-starter/project/starter_files/Eigen/LU
+/home/workspace/nd013-c6-control-starter/project/starter_files/Eigen/LU
 integral.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/integral.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/integral.h
 spiral_equations.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/spiral_equations.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/spiral_equations.h
 structs.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/structs.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/structs.h
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/cubic_spiral.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/cubic_spiral.h
 vector
 -
 glog/logging.h
 -
 spiral_base.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/spiral_base.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/spiral_base.h
 structs.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/structs.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/structs.h
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/integral.cpp
+/home/workspace/nd013-c6-control-starter/project/starter_files/integral.cpp
 integral.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/integral.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/integral.h
 array
 -
 glog/logging.h
@@ -100,13 +100,13 @@ glog/logging.h
 gtest/gtest.h
 -
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/integral.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/integral.h
 functional
 -
 vector
 -
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/json.hpp
+/home/workspace/nd013-c6-control-starter/project/starter_files/json.hpp
 algorithm
 -
 array
@@ -162,7 +162,7 @@ utility
 vector
 -
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/main.cpp
+/home/workspace/nd013-c6-control-starter/project/starter_files/main.cpp
 string
 -
 array
@@ -190,7 +190,7 @@ tuple
 vector
 -
 json.hpp
-/home/workspace/nd013-c5-planning-starter/project/starter_files/json.hpp
+/home/workspace/nd013-c6-control-starter/project/starter_files/json.hpp
 carla/client/ActorBlueprint.h
 -
 carla/client/BlueprintLibrary.h
@@ -214,15 +214,15 @@ carla/image/ImageView.h
 carla/sensor/data/Image.h
 -
 Eigen/QR
-/home/workspace/nd013-c5-planning-starter/project/starter_files/Eigen/QR
+/home/workspace/nd013-c6-control-starter/project/starter_files/Eigen/QR
 behavior_planner_FSM.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/behavior_planner_FSM.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/behavior_planner_FSM.h
 motion_planner.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/motion_planner.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/motion_planner.h
 planning_params.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/planning_params.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/planning_params.h
 utils.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/utils.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/utils.h
 iostream
 -
 uWS/uWS.h
@@ -232,11 +232,11 @@ math.h
 vector
 -
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/motion_planner.cpp
+/home/workspace/nd013-c6-control-starter/project/starter_files/motion_planner.cpp
 motion_planner.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/motion_planner.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/motion_planner.h
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/motion_planner.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/motion_planner.h
 math.h
 -
 cfloat
@@ -250,31 +250,31 @@ carla/client/Client.h
 glog/logging.h
 -
 cost_functions.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/cost_functions.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/cost_functions.h
 cubic_spiral.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/cubic_spiral.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/cubic_spiral.h
 planning_params.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/planning_params.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/planning_params.h
 structs.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/structs.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/structs.h
 utils.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/utils.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/utils.h
 velocity_profile_generator.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/velocity_profile_generator.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/velocity_profile_generator.h
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/planning_params.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/planning_params.h
 array
 -
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/spiral_base.cpp
+/home/workspace/nd013-c6-control-starter/project/starter_files/spiral_base.cpp
 spiral_base.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/spiral_base.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/spiral_base.h
 cmath
 -
 limits
 -
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/spiral_base.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/spiral_base.h
 algorithm
 -
 cmath
@@ -282,31 +282,31 @@ cmath
 vector
 -
 structs.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/structs.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/structs.h
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/spiral_equations.cpp
+/home/workspace/nd013-c6-control-starter/project/starter_files/spiral_equations.cpp
 spiral_equations.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/spiral_equations.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/spiral_equations.h
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/spiral_equations.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/spiral_equations.h
 array
 -
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/structs.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/structs.h
 vector
 -
 carla/geom/Location.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/carla/geom/Location.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/carla/geom/Location.h
 carla/geom/Rotation.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/carla/geom/Rotation.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/carla/geom/Rotation.h
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/utils.cpp
+/home/workspace/nd013-c6-control-starter/project/starter_files/utils.cpp
 utils.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/utils.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/utils.h
 cmath
 -
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/utils.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/utils.h
 random
 -
 vector
@@ -314,11 +314,11 @@ vector
 carla/client/Client.h
 -
 structs.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/structs.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/structs.h
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/velocity_profile_generator.cpp
+/home/workspace/nd013-c6-control-starter/project/starter_files/velocity_profile_generator.cpp
 velocity_profile_generator.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/velocity_profile_generator.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/velocity_profile_generator.h
 cfloat
 -
 cmath
@@ -328,7 +328,7 @@ cstdlib
 thread
 -
 
-/home/workspace/nd013-c5-planning-starter/project/starter_files/velocity_profile_generator.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/velocity_profile_generator.h
 vector
 -
 carla/client/Client.h
@@ -336,9 +336,9 @@ carla/client/Client.h
 glog/logging.h
 -
 structs.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/structs.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/structs.h
 utils.h
-/home/workspace/nd013-c5-planning-starter/project/starter_files/utils.h
+/home/workspace/nd013-c6-control-starter/project/starter_files/utils.h
 
 eigen-3.3.7/Eigen/Cholesky
 Core

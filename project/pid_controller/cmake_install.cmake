@@ -1,4 +1,4 @@
-# Install script for directory: /home/workspace/nd013-c5-planning-starter/project/pid_controller
+# Install script for directory: /home/workspace/nd013-c6-control-starter/project/pid_controller
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/workspace/nd013-c5-planning-starter/project/pid_controller/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/workspace/nd013-c6-control-starter/project/pid_controller/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

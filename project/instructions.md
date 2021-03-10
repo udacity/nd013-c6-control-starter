@@ -33,7 +33,7 @@ More details can be found at [CARLA Quick Start Installation](https://carla.read
    ```
    mkdir sdcnd_c5 # Or wherever you want to place
    cd sdcnd_c5
-   git clone https://github.com/udacity/nd013-c5-planning-refresh.git
+   git clone https://github.com/udacity/nd013-c6-control-refresh.git
    ```
  
 * Make sure ALL is working well:
@@ -46,7 +46,7 @@ More details can be found at [CARLA Quick Start Installation](https://carla.read
    * Open another terminal and launch Udacity’s Decision making & Motion Planning application:
  
    ```
-   cd sdcnd_c5/nd013-c5-planning-refresh/project/solution_cubic_spirals_STARTER
+   cd sdcnd_c5/nd013-c6-control-refresh/project/solution_cubic_spirals_STARTER
    make run
    ```
 * Follow the TODO’s on the project plan and code all your changes.
