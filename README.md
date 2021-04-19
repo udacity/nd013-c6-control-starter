@@ -91,7 +91,7 @@ The values of the error and the pid command are saved in thottle_data.txt and st
 Plot the saved values using the command (in nd013-c6-control-refresh/project):
 
 ```
-python3 plot.py
+python3 plot_pid.py
 ```
 
 You might need to install a few additional python modules: 
