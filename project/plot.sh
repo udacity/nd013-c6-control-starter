@@ -1,0 +1,1 @@
+gnuplot -p "pid_controller/plot_pid.plt"
