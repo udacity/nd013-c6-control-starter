@@ -65,7 +65,7 @@ string hasData(string s) {
     auto b2 = s.find_first_of("}");
     if (found_null != string::npos) {
       return "";
-    } 
+    }
     else if (b1 != string::npos && b2 != string::npos) {
       return s.substr(b1, b2 - b1 + 1);
     }
@@ -99,13 +99,13 @@ void path_planner(vector<double>& x_points, vector<double>& y_points, vector<dou
   ego_state.location.x = x_points[x_points.size()-1];
   ego_state.location.y = y_points[y_points.size()-1];
   ego_state.velocity.x = velocity;
-  
+
   if( x_points.size() > 1 ){
   	ego_state.rotation.yaw = angle_between_points(x_points[x_points.size()-2], y_points[y_points.size()-2], x_points[x_points.size()-1], y_points[y_points.size()-1]);
-  	ego_state.velocity.x = v_points[v_points.size()-1];	
+  	ego_state.velocity.x = v_points[v_points.size()-1];
   	if(velocity < 0.01)
   		ego_state.rotation.yaw = yaw;
-  	
+
   }
 
   Maneuver behavior = behavior_planner.get_active_maneuver();
@@ -153,7 +153,7 @@ void path_planner(vector<double>& x_points, vector<double>& y_points, vector<dou
       double velocity = trajectory[j].v;
       spiral_x.push_back(point_x);
       spiral_y.push_back(point_y);
-      spiral_v.push_back(velocity);  
+      spiral_v.push_back(velocity);
     }
 
     spirals_x.push_back(spiral_x);
@@ -190,7 +190,7 @@ void set_obst(vector<double> x_points, vector<double> y_points, vector<State>& o
 		State obstacle;
 		obstacle.location.x = x_points[i];
 		obstacle.location.y = y_points[i];
-		obstacles.push_back(obstacle);  
+		obstacles.push_back(obstacle);
 	}
 	obst_flag = true;
 }
@@ -199,49 +199,49 @@ int main ()
 {
   cout << "starting server" << endl;
   uWS::Hub h;
-  
+
   double new_delta_time;
   int i = 0;
-  
+
   fstream file_steer;
   file_steer.open("steer_pid_data.txt", std::ofstream::out | std::ofstream::trunc);
   file_steer.close();
   fstream file_throttle;
   file_throttle.open("throttle_pid_data.txt", std::ofstream::out | std::ofstream::trunc);
   file_throttle.close();
-   
+
   time_t prev_timer;
   time_t timer;
   time(&prev_timer);
- 
+
   // initialize pid steer
   /**
   * TODO (Step 1): create pid (pid_steer) for steer command and initialize values
   **/
 
-  
+
   // initialize pid throttle
   /**
   * TODO (Step 1): create pid (pid_throttle) for throttle command and initialize values
   **/
-  
+
   PID pid_steer = PID();
   PID pid_throttle = PID();
-    
+
   h.onMessage([&pid_steer, &pid_throttle, &new_delta_time, &timer, &prev_timer, &i, &prev_timer](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode)
   {
         auto s = hasData(data);
-    
+
         if (s != "") {
-          
+
           auto data = json::parse(s);
-          
+
           // create file to save values
           fstream file_steer;
           file_steer.open("steer_pid_data.txt");
           fstream file_throttle;
           file_throttle.open("throttle_pid_data.txt");
-          
+
           vector<double> x_points = data["traj_x"];
           vector<double> y_points = data["traj_y"];
           vector<double> v_points = data["traj_v"];
@@ -253,6 +253,10 @@ int main ()
           double waypoint_t = data["waypoint_t"];
           bool is_junction = data["waypoint_j"];
           string tl_state = data["tl_state"];
+
+          double x_position = data["location_x"];
+          double y_position = data["location_y"];
+          double z_position = data["location_z"];
 
           if(!have_obst){
           	vector<double> x_obst = data["obst_x"];
@@ -269,7 +273,7 @@ int main ()
           vector< vector<double> > spirals_y;
           vector< vector<double> > spirals_v;
           vector<int> best_spirals;
-          
+
           path_planner(x_points, y_points, v_points, yaw, velocity, goal, is_junction, tl_state, spirals_x, spirals_y, spirals_v, best_spirals);
 
           // Save time and compute delta time
@@ -278,29 +282,28 @@ int main ()
           prev_timer = timer;
 
           ////////////////////////////////////////
-          // Steering control 
+          // Steering control
           ////////////////////////////////////////
 
           /**
-          * TODO (step 3): uncomment these lines 
+          * TODO (step 3): uncomment these lines
           **/
 //           // Update the delta time with the previous command
 //           pid_steer.UpdateDeltaTime(new_delta_time);
 
           // Compute steer error
           double error_steer;
-          
-          
+
+
           double steer_output;
-          
+
           /**
           * TODO (step 3): compute the steer error (error_steer) from the position and the desired trajectory
           **/
-//           // modify the following line for step 3
 //           error_steer = 0;
-          
+
           /**
-          * TODO (step 3): uncomment these lines 
+          * TODO (step 3): uncomment these lines
           **/
 //           // Compute control to apply
 //           pid_steer.UpdateError(error_steer);
@@ -314,13 +317,13 @@ int main ()
 //           file_steer  << i ;
 //           file_steer  << " " << error_steer;
 //           file_steer  << " " << steer_output << endl;
-          
+
           ////////////////////////////////////////
-          // Throttle control 
+          // Throttle control
           ////////////////////////////////////////
 
           /**
-          * TODO (step 2): uncomment these lines 
+          * TODO (step 2): uncomment these lines
           **/
 //           // Update the delta time with the previous command
 //           pid_throttle.UpdateDeltaTime(new_delta_time);
@@ -332,14 +335,14 @@ int main ()
           **/
           // modify the following line for step 2
           error_throttle = 0;
-          
-          
-          
+
+
+
           double throttle_output;
           double brake_output;
 
           /**
-          * TODO (step 2): uncomment these lines 
+          * TODO (step 2): uncomment these lines
           **/
 //           // Compute control to apply
 //           pid_throttle.UpdateError(error_throttle);
@@ -364,13 +367,13 @@ int main ()
 //           file_throttle  << " " << brake_output;
 //           file_throttle  << " " << throttle_output << endl;
 
-          
+
           // Send control
           json msgJson;
           msgJson["brake"] = brake_output;
           msgJson["throttle"] = throttle_output;
           msgJson["steer"] = steer_output;
-         
+
           msgJson["trajectory_x"] = x_points;
           msgJson["trajectory_y"] = y_points;
           msgJson["trajectory_v"] = v_points;
@@ -381,29 +384,29 @@ int main ()
           msgJson["active_maneuver"] = behavior_planner.get_active_maneuver();
 
           //  min point threshold before doing the update
-          // for high update rate use 19 for slow update rate use 4 
+          // for high update rate use 19 for slow update rate use 4
           msgJson["update_point_thresh"] = 16;
 
           auto msg = msgJson.dump();
-          
+
           i = i + 1;
           file_steer.close();
           file_throttle.close();
-  
-      ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT); 
-         
-    } 
+
+      ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+
+    }
 
   });
 
-    
-  h.onConnection([](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req) 
+
+  h.onConnection([](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req)
   {
       cout << "Connected!!!" << endl;
     });
 
-  
-  h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws, int code, char *message, size_t length) 
+
+  h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws, int code, char *message, size_t length)
     {
       ws.close();
       cout << "Disconnected" << endl;
@@ -414,12 +417,12 @@ int main ()
     {
       cout << "Listening to port " << port << endl;
       h.run();
-    } 
-  else 
+    }
+  else
     {
       cerr << "Failed to listen to port" << endl;
       return -1;
     }
-    
+
 
 }

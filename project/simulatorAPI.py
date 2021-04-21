@@ -97,7 +97,7 @@ _view_pitch = 0
 _view_pitch_change = 0
 
 ws=create_connection("ws://localhost:4567")
-       
+
 try:
     import pygame
     from pygame.locals import K_RIGHT
@@ -180,7 +180,7 @@ class World(object):
                 _tl_state = str(carla.TrafficLightState.Green)
 
             return point.x, point.y, waypoint.transform.rotation.yaw * math.pi/180, False
-  
+
         waypoint = waypoint.next(distance_lookahead(magnitude(self.player.get_velocity() ), magnitude(self.player.get_acceleration() ) ))[0]
         point = waypoint.transform.location
 
@@ -198,7 +198,7 @@ class World(object):
                 is_goal_junction = False;
             else:
                 _prev_junction_id = cur_junction_id
-  
+
         return point.x, point.y, waypoint.transform.rotation.yaw * math.pi/180, is_goal_junction
 
     def move(self, sim_time, res=1):
@@ -231,9 +231,9 @@ class World(object):
 #                 start.location.z = height_plot_scale * spirals_v[i][previous_index] + height_plot_offset + _road_height
 #                 end.location.z =  height_plot_scale * spirals_v[i][index] + height_plot_offset + _road_height
 #                 self.world.debug.draw_line(start.location, end.location, 0.1, color, .1)
-#                 previous_index = index  
+#                 previous_index = index
 
-        
+
 #         # draw path
 #         previous_index = 0
 #         for index in range(res, len(way_points), res):
@@ -243,7 +243,7 @@ class World(object):
 #             end.location.z = height_plot_scale * v_points[index] + height_plot_offset + _road_height
 #             self.world.debug.draw_line(start.location, end.location, 0.1, carla.Color(r=125, g=125, b=0), .1)
 #             previous_index = index
-        
+
         # increase wait time for debug
         wait_time = 0.0
         delta_t = 0.05
@@ -266,13 +266,16 @@ class World(object):
                         way_points.pop(0)
                         v_points.pop(0)
                         d_interval = math.sqrt( (way_points[1].location.x - way_points[0].location.x )**2 + (way_points[1].location.y - way_points[0].location.y )**2  )
-                    ratio = D / d_interval
-                    v_points[0] = ratio * (v_points[1]-v_points[0]) + v_points[0]
-                    way_points[0].location.x = ratio * (way_points[1].location.x - way_points[0].location.x) + way_points[0].location.x
-                    way_points[0].location.y = ratio * (way_points[1].location.y - way_points[0].location.y) + way_points[0].location.y
-                    yaw = math.atan2(way_points[1].location.y-way_points[0].location.y, way_points[1].location.x-way_points[0].location.x)
-                    
-                
+                    if abs(d_interval) < 1e-6:
+                        yaw = 0.
+                    else:
+                        ratio = D / d_interval
+                        v_points[0] = ratio * (v_points[1]-v_points[0]) + v_points[0]
+                        way_points[0].location.x = ratio * (way_points[1].location.x - way_points[0].location.x) + way_points[0].location.x
+                        way_points[0].location.y = ratio * (way_points[1].location.y - way_points[0].location.y) + way_points[0].location.y
+                        yaw = math.atan2(way_points[1].location.y-way_points[0].location.y, way_points[1].location.x-way_points[0].location.x)
+
+
                 way_points[0].rotation.yaw = yaw * 180 / math.pi
                 way_points[0].rotation.pitch = _road_pitch
                 way_points[0].rotation.roll = _road_roll
@@ -298,10 +301,10 @@ class World(object):
                 _pivot.rotation.yaw  = _view_yaw * 180 / math.pi
                 _pivot.rotation.pitch  = _view_pitch * 180 / math.pi
                 _pivot.location.z += 2 + _view_radius * math.sin(math.pi + _view_pitch)
-                # Teleports the actor to a given transform (location and rotation):  
-#                 self.player.set_transform(way_points[0])                                
-                self.player.apply_control(carla.VehicleControl(throttle=throttle, steer=steer, brake=brake))    
-                
+                # Teleports the actor to a given transform (location and rotation):
+#                 self.player.set_transform(way_points[0])
+                self.player.apply_control(carla.VehicleControl(throttle=throttle, steer=steer, brake=brake))
+
 
     def restart(self):
         self.player_max_speed = 1.589
@@ -325,7 +328,7 @@ class World(object):
             blueprint.set_attribute('driver_id', driver_id)
         if blueprint.has_attribute('is_invincible'):
             blueprint.set_attribute('is_invincible', 'true')
-        
+
         # Spawn the player.
         if self.player is not None:
             spawn_point = self.player.get_transform()
@@ -708,7 +711,7 @@ class CameraManager(object):
         self = weak_self()
         if not self:
             return
-        
+
         if self.sensors[self.index][0].startswith('sensor.camera.dvs'):
             # Example of converting the raw_data from a carla.DVSEventArray
             # sensor into a NumPy array and using it as an image
@@ -803,7 +806,7 @@ def game_loop(args):
         controller = KeyboardControl(world)
 
         clock = pygame.time.Clock()
-        
+
         world.player.set_simulate_physics(True)
 
         # Spawn some obstacles to avoid
@@ -819,26 +822,26 @@ def game_loop(args):
                 vehicles_list.append(response.actor_id)
 
         start_time = world.hud.simulation_time
-        
+
 #         measurement_data, sensor_data = client.read_data()
 #         forward_speed = measurement_data.player_measurements.forward_speed
-        
+
         while True:
             yield from asyncio.sleep(0.01) # check if any data from the websocket
 
             if controller.parse_events(client, world):
                 return
-            
+
             if len(way_points) == 0:
                 player = world.player.get_transform()
                 way_points.append(player)
                 v_points.append(0)
 
-            
+
             sim_time = world.hud.simulation_time - start_time
-            
+
             if update_cycle and (len(way_points) < _update_point_thresh):
-                
+
                 update_cycle = False
                 # print("sending data")
 
@@ -849,16 +852,24 @@ def game_loop(args):
                 real_v = world.player.get_velocity()
                 velocity = math.sqrt(real_v.x**2 + real_v.y**2)
                 print('velocity sent: ', velocity)
-    
-                ws.send(json.dumps({'traj_x': x_points, 'traj_y': y_points, 'traj_v': v_points ,'yaw': _prev_yaw, "velocity": velocity, 'time': sim_time, 'waypoint_x': waypoint_x, 'waypoint_y': waypoint_y, 'waypoint_t': waypoint_t, 'waypoint_j': waypoint_j, 'tl_state': _tl_state, 'obst_x': obst_x, 'obst_y': obst_y } ))
-               
-            
+
+                t = world.player.get_transform()
+                location_x = t.location.x
+                location_y = t.location.y
+                location_z = t.location.z
+
+                ws.send(json.dumps({'traj_x': x_points, 'traj_y': y_points, 'traj_v': v_points ,'yaw': _prev_yaw, "velocity": velocity, 'time': sim_time, 'waypoint_x': waypoint_x, 'waypoint_y': waypoint_y, 'waypoint_t': waypoint_t, 'waypoint_j': waypoint_j, 'tl_state': _tl_state, 'obst_x': obst_x, 'obst_y': obst_y, 'location_x': location_x, 'location_y': location_y, 'location_z': location_z } ))
+
             clock.tick_busy_loop(60)
             world.tick(clock)
-            
+
             world.move(sim_time)
             world.render(display)
             pygame.display.flip()
+
+    except Exception as error:
+        print('EXCEPTION IN GAME LOOP:')
+        print(error)
 
     finally:
 
@@ -889,11 +900,11 @@ def get_data():
     spirals_v = data['spirals_v']
     spiral_idx = data['spiral_idx']
     _active_maneuver = data['active_maneuver']
-    
+
     steer = data['steer']
     throttle = data['throttle']
     brake = data['brake']
-    
+
     print('steer: ', steer)
     print('throttle: ', throttle)
     print('brake: ', brake)
