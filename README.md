@@ -1,47 +1,144 @@
-# Control and Trajectory Tracking for Autonomous Vehicle
+# Project: Control and Trajectory Tracking for Autonomous Vehicle
 
-# Proportional-Integral-Derivative (PID)
+## Proportional-Integral-Derivative (PID)
 
 In this project, you will apply the skills you have acquired in this course to design a PID controller to perform vehicle trajectory tracking. Given a trajectory as an array of locations, and a simulation environment, you will design and code a PID controller and test its efficiency on the CARLA simulator used in the industry.
 
-### Installation
+## Project Steps Overview
+
+1. Design the PID controller in C++
+2. Integrate the controller with the CARLA simulator.
+3. Tune the parameters using a technique
+4. Explain a strategy to test the controller and perform the test.
+5. Create plots to show how successful the controller is as well as the simulator video.
+6. Talk about how the controller recovered/etc. Can be a sentence.
+
+
+
+## Starter Files
 
 Run the following commands to install the starter code in the Udacity Workspace:
 
-Clone the <a href="https://github.com/udacity/nd013-c6-control-starter/tree/master" target="_blank">repository</a>:
+Clone the <a href="https://github.com/udacity/nd013-c6-control-starter" target="_blank">repository</a>:
 
-`git clone https://github.com/udacity/nd013-c6-control-starter.git`
 
-## Run Carla Simulator
+```bash
+git clone https://github.com/udacity/nd013-c6-control-starter.git
+cd nd013-c6-control-starter
+```
 
-Open new window
+![plot](images/project-setup.png)
 
-* `su - student`
-// Will say permission denied, ignore and continue
-* `cd /opt/carla-simulator/`
-* `SDL_VIDEODRIVER=offscreen ./CarlaUE4.sh -opengl`
+To get started, switch to the project directory
 
-## Compile and Run the Controller
+```bash
+cd project
+```
 
-Open new window
+You should see the project structure as follow:
 
-* `cd nd013-c6-control-starter/project`
-* `./install-ubuntu.sh`
-* `cd pid_controller/`
-* `rm -rf rpclib`
-* `git clone https://github.com/rpclib/rpclib.git`
-* `cmake .`
-* `make` (This last command compiles your c++ code, run it after every change in your code)
+```bash
+.
+├── README.md # Must read
+├── cserver_dir
+├── install-ubuntu.sh
+├── manual_control.py
+├── pid_controller
+├── plot_pid.py
+├── run_carla.sh
+├── run_main_pid.sh
+├── simulatorAPI.py
+├── steer_pid_data.txt
+└── throttle_pid_data.txt
+```
 
-## Testing
+## Installation
+ 
+### For Windows & Ubuntu 18.04 and Earlier
+* Pre-requisites:
+   * python3.7
+   * carla (API)
+   * pip 
+   * numpy
+   * pygame 
+   * gtest
+   * websocket
+* Additional installations:
+   * sudo apt install python3.7
+   * python3.7 -m pip install -U pip carla pandas matplotlib numpy pygame websocket-client --user
+   * sudo apt-get install -y libgoogle-glog-dev libgtest-dev
+
+   
+* The deb installation is the easiest way to get the latest release in Linux.
+```
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1AF1527DE64CB8D9
+sudo add-apt-repository "deb [arch=amd64] http://dist.carla.org/carla $(lsb_release -sc) main"
+sudo apt-get update # Update the Debian package index
+sudo apt-get install carla-simulator=0.9.10-2 
+cd /opt/carla-simulator
+# Linux
+./CarlaUE4.sh
+```
+
+More details can be found at [CARLA Quick Start Installation](https://carla.readthedocs.io/en/latest/start_quickstart/)  
+> NOTE: CARLA does NOT work on Ubuntu 20.04 or Mac yet!!
+  
+* Make sure ALL is working well:
+   * Open a terminal an launch CARLA (if you don't have it open already):
+   ```bash
+   cd /opt/carla-simulator
+   # Linux
+   ./CarlaUE4.sh
+   ```
+
+   ![plot](images/carla-test.png)
+
+   Then, in a few seconds the Carla Simulator will launch:
+
+   ![plot](images/carla-test-window.png)
+
+### Install all dependencies
+
+Run the following commands in another terminal window inside the project folder:
+```bash
+./install-ubuntu.sh
+```
+
+![plot](images/dependencies-install.png)
+
+Then, compile the `rpclib` library. This library is a msgpack-rpc library written using modern C++. The goal of this library is to provide a simple, no-nonsense RPC solution.
+```bash
+cd pid_controller
+rm -rf rpclib
+git clone https://github.com/rpclib/rpclib.git
+```
+
+![plot](images/rpclib-clone.png)
+
+```bash
+cmake .
+make
+```
+
+![plot](images/rpclib-build.png)
+
+
+## Build the project and run the simulator
 
 To test your installation run the following commands.
 
-* `cd nd013-c6-control-starter/project`
-* `./run_main_pid.sh`
-This will silently fail `ctrl + C` to stop
-* `./run_main_pid.sh` (again)
-Go to desktop mode to see CARLA
+Run the following commands in the existing terminal window:
+```bash
+cd pid_controller/
+cmake .
+make
+cd nd013-c6-control-starter/project
+./run_main_pid.sh
+# This will silently fail 
+# ctrl + C to stop 
+```
+
+![plot](images/carla-simulator.png)
 
 If error bind is already in use, or address already being used
 
@@ -91,13 +188,13 @@ Useful variables:
 The values of the error and the pid command are saved in thottle_data.txt and steer_data.txt.
 Plot the saved values using the command (in nd013-c6-control-refresh/project):
 
-```
+```bash
 python3 plot_pid.py
 ```
 
 You might need to install a few additional python modules: 
 
-```
+```bash
 pip3 install pandas
 pip3 install matplotlib
 ```
@@ -115,4 +212,5 @@ Answer the following questions:
 - When you wil be testing your c++ code, restart the Carla simulator to remove the former car from the simulation.
 - If the simulation freezes on the desktop mode but is still running on the terminal, close the desktop and restart it.
 - When you will be tuning the PID parameters, try between those values:
+
 

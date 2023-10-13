@@ -13,7 +13,7 @@ set(sources main.cpp behavior_planner_FSM.cpp motion_planner.cpp cubic_spiral.cp
 
 set(CARLALIB_DIR ${CMAKE_SOURCE_DIR}/libcarla-install/lib)
 set(carla_libs  ${CARLALIB_DIR}/libboost_filesystem.a ${CARLALIB_DIR}/libboost_numpy36.a ${CARLALIB_DIR}/libboost_program_options.a ${CARLALIB_DIR}/libboost_python36.a ${CARLALIB_DIR}/libboost_system.a ${CARLALIB_DIR}/libcarla_client.a ${CARLALIB_DIR}/librpc.a ${CARLALIB_DIR}/libDebugUtils.a ${CARLALIB_DIR}/libDetour.a ${CARLALIB_DIR}/libDetourCrowd.a ${CARLALIB_DIR}/libDetourTileCache.a ${CARLALIB_DIR}/libRecast.a)
-set(gtest_lib /usr/src/gtest/libgtest.a)
+set(gtest_lib /usr/src/gtest/lib/libgtest.a)
 
 include_directories(/usr/local/include)
 link_directories(/usr/local/lib)
