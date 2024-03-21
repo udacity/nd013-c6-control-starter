@@ -140,9 +140,8 @@ You will find the following files in the project directory.
 ## Step 4. Start the Carla Server
 Start the Carla server by executing the following shell script. 
 ```bash
-./run_carla.sh
+/opt/carla-simulator/CarlaUE4.sh
 ```
-This file will, in turn, execute the **/opt/carla-simulator/CarlaUE4.sh** script. 
 
 
 <br/><br/>
