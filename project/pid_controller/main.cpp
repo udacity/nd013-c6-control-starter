@@ -44,6 +44,7 @@
 #include "planning_params.h"
 #include "utils.h"
 #include "pid_controller.h"
+#include "pid_twiddle.h"
 
 #include <limits>
 #include <iostream>
@@ -91,6 +92,26 @@ MotionPlanner motion_planner(P_NUM_PATHS, P_GOAL_OFFSET, P_ERR_TOLERANCE);
 
 bool have_obst = false;
 vector<State> obstacles;
+
+namespace {
+
+const PidGains kInitialSteerGains{1.0, 0.0001, 0.1};
+const PidGains kInitialThrottleGains{0.5, 0.0, 0.02};
+
+const PidGains kSteerTwiddleDeltas{0.2, 0.00005, 0.05};
+const PidGains kThrottleTwiddleDeltas{0.1, 0.0001, 0.02};
+
+constexpr double kTwiddleTolerance = 0.001;
+constexpr int kTwiddleWarmupSteps = 60;
+constexpr int kTwiddleEvaluationSteps = 180;
+constexpr bool kEnableSteerTwiddle = true;
+constexpr bool kEnableThrottleTwiddle = true;
+
+void InitializePid(PID& pid, const PidGains& gains) {
+  pid.Init(gains.kp, gains.ki, gains.kd, 1.0, -1.0);
+}
+
+}  // namespace
 
 void path_planner(vector<double>& x_points, vector<double>& y_points, vector<double>& v_points, double yaw, double velocity, State goal, bool is_junction, string tl_state, vector< vector<double> >& spirals_x, vector< vector<double> >& spirals_y, vector< vector<double> >& spirals_v, vector<int>& best_spirals){
 
@@ -219,16 +240,23 @@ int main ()
   * TODO (Step 1): create pid (pid_steer) for steer command and initialize values
   **/
   PID pid_steer = PID();
-  pid_steer.Init(1.0, 0.0001, 0.1, 1.0, -1.0);
+  InitializePid(pid_steer, kInitialSteerGains);
+  PidTwiddle steer_twiddle("steer", kInitialSteerGains, kSteerTwiddleDeltas,
+                           kTwiddleTolerance, kTwiddleWarmupSteps,
+                           kTwiddleEvaluationSteps, kEnableSteerTwiddle);
 
   // initialize pid throttle
   /**
   * TODO (Step 1): create pid (pid_throttle) for throttle command and initialize values
   **/
   PID pid_throttle = PID();
-  pid_throttle.Init(0.5, 0.0, 0.02, 1.0, -1.0);
+  InitializePid(pid_throttle, kInitialThrottleGains);
+  PidTwiddle throttle_twiddle("throttle", kInitialThrottleGains, kThrottleTwiddleDeltas,
+                              kTwiddleTolerance, kTwiddleWarmupSteps,
+                              kTwiddleEvaluationSteps, kEnableThrottleTwiddle);
 
-  h.onMessage([&pid_steer, &pid_throttle, &new_delta_time, &timer, &prev_timer, &i, &prev_timer](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode)
+  h.onMessage([&pid_steer, &pid_throttle, &steer_twiddle, &throttle_twiddle,
+               &new_delta_time, &timer, &prev_timer, &i](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode)
   {
         auto s = hasData(data);
 
@@ -324,6 +352,9 @@ int main ()
           // Compute control to apply
           pid_steer.UpdateError(error_steer);
           steer_output = pid_steer.TotalError();
+          if (steer_twiddle.Update(error_steer)) {
+            InitializePid(pid_steer, steer_twiddle.gains());
+          }
 
           // Save data
           file_steer.seekg(std::ios::beg);
@@ -350,7 +381,8 @@ int main ()
           * TODO (step 2): compute the throttle error (error_throttle) from the position and the desired speed
           **/
           // modify the following line for step 2
-          error_throttle = v_points[min(target_idx, static_cast<int>(v_points.size()) - 1)] - velocity;
+          // error_throttle = v_points[min(target_idx, static_cast<int>(v_points.size()) - 1)] - velocity;
+          error_throttle = velocity - v_points[min(target_idx, static_cast<int>(v_points.size()) - 1)];
 
 
           double throttle_output = 0.0;
@@ -362,6 +394,9 @@ int main ()
           // Compute control to apply
           pid_throttle.UpdateError(error_throttle);
           double throttle = pid_throttle.TotalError();
+          if (throttle_twiddle.Update(error_throttle)) {
+            InitializePid(pid_throttle, throttle_twiddle.gains());
+          }
 
           // Adapt the negative throttle to break
           if (throttle > 0.0) {
