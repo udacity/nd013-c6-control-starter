@@ -11,7 +11,6 @@
 
 #include <string>
 #include <array>
-#include <algorithm>
 #include <cfloat>
 #include <chrono>
 #include <cmath>
@@ -212,10 +211,6 @@ int main ()
   file_throttle.close();
 
   chrono::steady_clock::time_point prev_timer = chrono::steady_clock::now();
-  double previous_x_position = 0.0;
-  double previous_y_position = 0.0;
-  double actual_yaw = 0.0;
-  bool have_previous_position = false;
 
   // initialize pid steer
   /**
@@ -231,10 +226,7 @@ int main ()
   PID pid_throttle = PID();
   pid_throttle.Init(0.4, 0.02, 0.05, 1.0, -1.0);
 
-  h.onMessage([&pid_steer, &pid_throttle, &new_delta_time, &prev_timer,
-               &previous_x_position, &previous_y_position, &actual_yaw,
-               &have_previous_position, &i](uWS::WebSocket<uWS::SERVER> ws,
-               char *data, size_t length, uWS::OpCode opCode)
+  h.onMessage([&pid_steer, &pid_throttle, &new_delta_time, &prev_timer, &i](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode)
   {
         auto s = hasData(data);
 
@@ -263,21 +255,6 @@ int main ()
           double x_position = data["location_x"];
           double y_position = data["location_y"];
           double z_position = data["location_z"];
-
-          // The simulator's yaw value follows its virtual trajectory. Estimate
-          // the physical vehicle heading from consecutive measured positions.
-          if (have_previous_position) {
-            double position_dx = x_position - previous_x_position;
-            double position_dy = y_position - previous_y_position;
-            if (position_dx * position_dx + position_dy * position_dy > 1e-6) {
-              actual_yaw = atan2(position_dy, position_dx);
-            }
-          } else {
-            actual_yaw = yaw;
-            have_previous_position = true;
-          }
-          previous_x_position = x_position;
-          previous_y_position = y_position;
 
           if(!have_obst){
           	vector<double> x_obst = data["obst_x"];
@@ -321,26 +298,12 @@ int main ()
           /**
           * TODO (step 3): compute the steer error (error_steer) from the position and the desired trajectory
           **/
-            // Find the path point nearest to the actual vehicle position, then
-            // aim a few points ahead. This follows the obstacle-avoidance curve
-            // while discarding stale path points already passed by the vehicle.
-            size_t nearest_index = 0;
-            double nearest_distance_squared = numeric_limits<double>::max();
-            for (size_t point_index = 0; point_index < x_points.size(); ++point_index) {
-              double dx = x_points[point_index] - x_position;
-              double dy = y_points[point_index] - y_position;
-              double distance_squared = dx * dx + dy * dy;
-              if (distance_squared < nearest_distance_squared) {
-                nearest_distance_squared = distance_squared;
-                nearest_index = point_index;
-              }
-            }
-            size_t lookahead_index = std::min(nearest_index + 3, x_points.size() - 1);
+            // The first path segment gives the immediate desired heading, while
+            // yaw is the current heading supplied by the simulator.
             double desired_yaw = angle_between_points(
-              x_position, y_position,
-              x_points[lookahead_index], y_points[lookahead_index]);
+              x_points[0], y_points[0], x_points[1], y_points[1]);
             // Normalize the heading difference to avoid a discontinuity at +/- pi.
-            error_steer = desired_yaw - actual_yaw;
+            error_steer = desired_yaw - yaw;
             while (error_steer > M_PI) error_steer -= 2.0 * M_PI;
             while (error_steer < -M_PI) error_steer += 2.0 * M_PI;
 
