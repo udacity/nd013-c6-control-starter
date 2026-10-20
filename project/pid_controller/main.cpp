@@ -210,9 +210,7 @@ int main ()
   file_throttle.open("throttle_pid_data.txt", std::ofstream::out | std::ofstream::trunc);
   file_throttle.close();
 
-  time_t prev_timer;
-  time_t timer;
-  time(&prev_timer);
+  chrono::steady_clock::time_point prev_timer = chrono::steady_clock::now();
 
   // initialize pid steer
   /**
@@ -228,7 +226,7 @@ int main ()
   PID pid_throttle = PID();
   pid_throttle.Init(0.4, 0.02, 0.05, 1.0, -1.0);
 
-  h.onMessage([&pid_steer, &pid_throttle, &new_delta_time, &timer, &prev_timer, &i](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode)
+  h.onMessage([&pid_steer, &pid_throttle, &new_delta_time, &prev_timer, &i](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode)
   {
         auto s = hasData(data);
 
@@ -277,8 +275,8 @@ int main ()
           path_planner(x_points, y_points, v_points, yaw, velocity, goal, is_junction, tl_state, spirals_x, spirals_y, spirals_v, best_spirals);
 
           // Save time and compute delta time
-          time(&timer);
-          new_delta_time = difftime(timer, prev_timer);
+          chrono::steady_clock::time_point timer = chrono::steady_clock::now();
+          new_delta_time = chrono::duration<double>(timer - prev_timer).count();
           prev_timer = timer;
 
           ////////////////////////////////////////
