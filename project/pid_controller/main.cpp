@@ -11,6 +11,7 @@
 
 #include <string>
 #include <array>
+#include <algorithm>
 #include <cfloat>
 #include <chrono>
 #include <cmath>
@@ -298,11 +299,24 @@ int main ()
           /**
           * TODO (step 3): compute the steer error (error_steer) from the position and the desired trajectory
           **/
-            // Use the tangent at the end of the planned trajectory. It reflects
-            // the newest path direction and starts correcting the heading early.
+            // Find the path point nearest to the actual vehicle position, then
+            // aim a few points ahead. This follows the obstacle-avoidance curve
+            // while discarding stale path points already passed by the vehicle.
+            size_t nearest_index = 0;
+            double nearest_distance_squared = numeric_limits<double>::max();
+            for (size_t point_index = 0; point_index < x_points.size(); ++point_index) {
+              double dx = x_points[point_index] - x_position;
+              double dy = y_points[point_index] - y_position;
+              double distance_squared = dx * dx + dy * dy;
+              if (distance_squared < nearest_distance_squared) {
+                nearest_distance_squared = distance_squared;
+                nearest_index = point_index;
+              }
+            }
+            size_t lookahead_index = std::min(nearest_index + 3, x_points.size() - 1);
             double desired_yaw = angle_between_points(
-              x_points[x_points.size() - 2], y_points[y_points.size() - 2],
-              x_points.back(), y_points.back());
+              x_position, y_position,
+              x_points[lookahead_index], y_points[lookahead_index]);
             // Normalize the heading difference to avoid a discontinuity at +/- pi.
             error_steer = desired_yaw - yaw;
             while (error_steer > M_PI) error_steer -= 2.0 * M_PI;
