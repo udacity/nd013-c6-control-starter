@@ -303,7 +303,8 @@ int main ()
             double desired_yaw = angle_between_points(
               x_points[0], y_points[0], x_points[1], y_points[1]);
             // Normalize the heading difference to avoid a discontinuity at +/- pi.
-            error_steer = desired_yaw - yaw;
+            // CARLA uses negative steering for a mathematical left turn.
+            error_steer = yaw - desired_yaw;
             while (error_steer > M_PI) error_steer -= 2.0 * M_PI;
             while (error_steer < -M_PI) error_steer += 2.0 * M_PI;
 
