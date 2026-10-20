@@ -298,12 +298,11 @@ int main ()
           /**
           * TODO (step 3): compute the steer error (error_steer) from the position and the desired trajectory
           **/
-            // Aim at a nearby look-ahead point so the controller follows path
-            // updates promptly instead of cutting toward the path's far end.
-            size_t lookahead_index = std::min<size_t>(5, x_points.size() - 1);
+            // Use the tangent at the end of the planned trajectory. It reflects
+            // the newest path direction and starts correcting the heading early.
             double desired_yaw = angle_between_points(
-              x_position, y_position,
-              x_points[lookahead_index], y_points[lookahead_index]);
+              x_points[x_points.size() - 2], y_points[y_points.size() - 2],
+              x_points.back(), y_points.back());
             // Normalize the heading difference to avoid a discontinuity at +/- pi.
             error_steer = desired_yaw - yaw;
             while (error_steer > M_PI) error_steer -= 2.0 * M_PI;
