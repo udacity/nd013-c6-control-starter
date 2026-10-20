@@ -217,7 +217,7 @@ int main ()
   * TODO (Step 1): create pid (pid_steer) for steer command and initialize values
   **/
   PID pid_steer = PID();
-  pid_steer.Init(0.4, 0.0, 0.02, 1.2, -1.2);
+  pid_steer.Init(0.25, 0.0, 0.02, 1.2, -1.2);
 
   // initialize pid throttle
   /**
@@ -298,10 +298,13 @@ int main ()
           /**
           * TODO (step 3): compute the steer error (error_steer) from the position and the desired trajectory
           **/
-            // Aim from the vehicle position toward the end of the planned path.
-            // Normalize the heading difference to avoid a discontinuity at +/- pi.
+            // Aim at a nearby look-ahead point so the controller follows path
+            // updates promptly instead of cutting toward the path's far end.
+            size_t lookahead_index = std::min<size_t>(5, x_points.size() - 1);
             double desired_yaw = angle_between_points(
-              x_position, y_position, x_points.back(), y_points.back());
+              x_position, y_position,
+              x_points[lookahead_index], y_points[lookahead_index]);
+            // Normalize the heading difference to avoid a discontinuity at +/- pi.
             error_steer = desired_yaw - yaw;
             while (error_steer > M_PI) error_steer -= 2.0 * M_PI;
             while (error_steer < -M_PI) error_steer += 2.0 * M_PI;
