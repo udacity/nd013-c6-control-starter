@@ -11,7 +11,6 @@
 
 #include <string>
 #include <array>
-#include <algorithm>
 #include <cfloat>
 #include <chrono>
 #include <cmath>
@@ -299,12 +298,11 @@ int main ()
           /**
           * TODO (step 3): compute the steer error (error_steer) from the position and the desired trajectory
           **/
-            // Look several trajectory points ahead so steering starts before
-            // the vehicle reaches the obstacle instead of reacting too late.
-            size_t lookahead_index = std::min<size_t>(5, x_points.size() - 1);
+            // New path-planner points are appended after the remaining old
+            // trajectory, so use its end to anticipate the avoidance maneuver.
             double desired_yaw = angle_between_points(
               x_points[0], y_points[0],
-              x_points[lookahead_index], y_points[lookahead_index]);
+              x_points.back(), y_points.back());
             // Normalize the heading difference to avoid a discontinuity at +/- pi.
             // CARLA uses negative steering for a mathematical left turn.
             error_steer = yaw - desired_yaw;
