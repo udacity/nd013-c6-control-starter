@@ -217,14 +217,14 @@ int main ()
   * TODO (Step 1): create pid (pid_steer) for steer command and initialize values
   **/
   PID pid_steer = PID();
-  pid_steer.Init(1.0, 0.0, 0.05, 1.2, -1.2);
+  pid_steer.Init(0.3, 0.001, 0.1, 1.2, -1.2);
 
   // initialize pid throttle
   /**
   * TODO (Step 1): create pid (pid_throttle) for throttle command and initialize values
   **/
   PID pid_throttle = PID();
-  pid_throttle.Init(0.4, 0.02, 0.05, 1.0, -1.0);
+  pid_throttle.Init(0.2, 0.001, 0.02, 1.0, -1.0);
 
   h.onMessage([&pid_steer, &pid_throttle, &new_delta_time, &prev_timer, &i](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode)
   {
@@ -298,14 +298,27 @@ int main ()
           /**
           * TODO (step 3): compute the steer error (error_steer) from the position and the desired trajectory
           **/
-            // New path-planner points are appended after the remaining old
-            // trajectory, so use its end to anticipate the avoidance maneuver.
+            // Track the next point after the trajectory point nearest to the
+            // vehicle. This avoids both delayed reaction and far-target sway.
+            size_t closest_index = 0;
+            double closest_distance_squared = numeric_limits<double>::max();
+            for (size_t point_index = 0; point_index < x_points.size(); ++point_index) {
+              double dx = x_points[point_index] - x_position;
+              double dy = y_points[point_index] - y_position;
+              double distance_squared = dx * dx + dy * dy;
+              if (distance_squared < closest_distance_squared) {
+                closest_distance_squared = distance_squared;
+                closest_index = point_index;
+              }
+            }
+            if (closest_index + 1 < x_points.size()) {
+              ++closest_index;
+            }
             double desired_yaw = angle_between_points(
-              x_points[0], y_points[0],
-              x_points.back(), y_points.back());
+              x_position, y_position,
+              x_points[closest_index], y_points[closest_index]);
             // Normalize the heading difference to avoid a discontinuity at +/- pi.
-            // CARLA uses negative steering for a mathematical left turn.
-            error_steer = yaw - desired_yaw;
+            error_steer = desired_yaw - yaw;
             while (error_steer > M_PI) error_steer -= 2.0 * M_PI;
             while (error_steer < -M_PI) error_steer += 2.0 * M_PI;
 
