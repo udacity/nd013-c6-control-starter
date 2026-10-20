@@ -217,7 +217,7 @@ int main ()
   * TODO (Step 1): create pid (pid_steer) for steer command and initialize values
   **/
   PID pid_steer = PID();
-  pid_steer.Init(0.3, 0.001, 0.1, 1.2, -1.2);
+  pid_steer.Init(0.3, 0.001, 0.1, 0.5, -0.5);
 
   // initialize pid throttle
   /**
@@ -302,21 +302,30 @@ int main ()
             // vehicle. This avoids both delayed reaction and far-target sway.
             size_t closest_index = 0;
             double closest_distance_squared = numeric_limits<double>::max();
+            bool found_point_ahead = false;
             for (size_t point_index = 0; point_index < x_points.size(); ++point_index) {
               double dx = x_points[point_index] - x_position;
               double dy = y_points[point_index] - y_position;
+              double distance_ahead = dx * cos(yaw) + dy * sin(yaw);
+              if (distance_ahead <= 0.0) {
+                continue;
+              }
               double distance_squared = dx * dx + dy * dy;
               if (distance_squared < closest_distance_squared) {
                 closest_distance_squared = distance_squared;
                 closest_index = point_index;
+                found_point_ahead = true;
               }
             }
-            if (closest_index + 1 < x_points.size()) {
+            if (found_point_ahead && closest_index + 1 < x_points.size()) {
               ++closest_index;
             }
-            double desired_yaw = angle_between_points(
-              x_position, y_position,
-              x_points[closest_index], y_points[closest_index]);
+            double desired_yaw = yaw;
+            if (found_point_ahead) {
+              desired_yaw = angle_between_points(
+                x_position, y_position,
+                x_points[closest_index], y_points[closest_index]);
+            }
             // Normalize the heading difference to avoid a discontinuity at +/- pi.
             error_steer = desired_yaw - yaw;
             while (error_steer > M_PI) error_steer -= 2.0 * M_PI;
